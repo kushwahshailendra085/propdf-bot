@@ -1,11 +1,5 @@
-# Base Image with Python
-FROM python:3.11-slim
-
-# Install system dependencies for Playwright and PyMuPDF
-RUN apt-get update && apt-get install -y \
-    wget \
-    gnupg \
-    && rm -rf /var/lib/apt/lists/*
+# Use official Playwright image which includes all browser dependencies
+FROM mcr.microsoft.com/playwright/python:v1.49.1-jammy
 
 # Set working directory
 WORKDIR /app
@@ -13,10 +7,6 @@ WORKDIR /app
 # Copy requirements and install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Install Playwright browsers AND their dependencies
-RUN playwright install chromium
-RUN playwright install-deps chromium
 
 # Copy project files
 COPY . .
