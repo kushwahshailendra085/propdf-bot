@@ -1,0 +1,8 @@
+downloads/
+__pycache__/
+.env
+.venv
+*.pdf
+*.png
+*.jpg
+*.jpeg

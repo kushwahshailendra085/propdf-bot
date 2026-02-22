@@ -1,0 +1,4 @@
+python-telegram-bot==21.10
+pymupdf==1.25.3
+playwright==1.49.1
+Pillow==10.2.0
