@@ -40,10 +40,33 @@ def process_pdf(input_path: str, branding_type: str = "pro_pdf") -> tuple[str, s
         })
 
         # Step 3: Dynamic Watermark with rotation and White Border
+        # Match pattern from image processor: adaptive size, lower opacity for PDF
         text = brand["watermark"]
         font_name = "hebo"
-        tw = fitz.get_text_length(text, fontname=font_name, fontsize=WATERMARK_SIZE)
-        th = WATERMARK_SIZE
+        
+        import math
+        target_fit = min(page.rect.width, page.rect.height) * 0.8
+        font_size = int(target_fit * 0.15)
+        
+        angle_rad = math.radians(WATERMARK_ANGLE)
+        cos_val = abs(math.cos(angle_rad))
+        sin_val = abs(math.sin(angle_rad))
+        
+        def get_rotated_size(f_size):
+            tw_temp = fitz.get_text_length(text, fontname=font_name, fontsize=f_size)
+            rw = tw_temp * cos_val + f_size * sin_val
+            rh = tw_temp * sin_val + f_size * cos_val
+            return rw, rh, tw_temp
+            
+        rw, rh, tw = get_rotated_size(font_size)
+        while (rw < target_fit and rh < target_fit) and font_size < 1000:
+            font_size += 5
+            rw, rh, tw = get_rotated_size(font_size)
+        while (rw > target_fit or rh > target_fit) and font_size > 10:
+            font_size -= 2
+            rw, rh, tw = get_rotated_size(font_size)
+            
+        th = font_size
         
         # Center point
         cp = fitz.Point(page.rect.width / 2, page.rect.height / 2)
@@ -57,15 +80,18 @@ def process_pdf(input_path: str, branding_type: str = "pro_pdf") -> tuple[str, s
         stroke_color = (1, 1, 1) # White
         fill_color = WATERMARK_COLOR
         
+        # Reduce opacity for PDF to match image visual appearance
+        pdf_opacity = WATERMARK_OPACITY * 0.4
+        
         # Draw stroke (4 directions)
         for dx, dy in [(-1, -1), (1, -1), (-1, 1), (1, 1)]:
             page.insert_text(
                 start_pt + fitz.Point(dx, dy),
                 text,
-                fontsize=WATERMARK_SIZE,
+                fontsize=font_size,
                 fontname=font_name,
                 color=stroke_color,
-                fill_opacity=WATERMARK_OPACITY,
+                fill_opacity=pdf_opacity,
                 morph=(cp, m),
                 overlay=True
             )
@@ -74,10 +100,10 @@ def process_pdf(input_path: str, branding_type: str = "pro_pdf") -> tuple[str, s
         page.insert_text(
             start_pt,
             text,
-            fontsize=WATERMARK_SIZE,
+            fontsize=font_size,
             fontname=font_name,
             color=fill_color,
-            fill_opacity=WATERMARK_OPACITY,
+            fill_opacity=pdf_opacity,
             morph=(cp, m),
             overlay=True
         )
