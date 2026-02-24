@@ -40,9 +40,9 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
         self.wfile.write(b"Bot is Running!")
 
 def run_health_server():
-    # Render usually provides PORT env var, default 8080
+    # Hugging Face Spaces provides PORT=7860, Render uses PORT=8080
     import os
-    port = int(os.environ.get("PORT", 8080))
+    port = int(os.environ.get("PORT", 7860))
     server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
     logger.info(f"🕸️ Health check server started on port {port}")
     server.serve_forever()

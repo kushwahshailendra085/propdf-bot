@@ -16,10 +16,10 @@ RUN mkdir -p downloads
 
 # Set Environment Variables
 ENV PYTHONUNBUFFERED=1
-ENV PORT=8080
+ENV PORT=7860
 
 # Expose port for health checks
-EXPOSE 8080
+EXPOSE 7860
 
 # Command to run the bot
 CMD ["python", "bot.py"]
