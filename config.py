@@ -8,7 +8,7 @@ Change settings here to update the bot's behavior.
 from pathlib import Path
 
 # ─── Bot Security & IDs ──────────────────────────────────────────────────────
-BOT_TOKEN = "7730777263:AAEsJDHQa_Cj5zqmsusZvWxVhLzRfgenHgo"
+BOT_TOKEN = "7730777263:AAE9YTAFzaSEFjxpjPo86c_WVZNRftMbdMw"
 ALLOWED_USERS = [2141959380, 8581064143]
 
 # ─── Directories ─────────────────────────────────────────────────────────────
@@ -17,7 +17,7 @@ DOWNLOAD_DIR = BASE_DIR / "downloads"
 
 # ─── Watermark Settings (Shared) ─────────────────────────────────────────────
 WATERMARK_OPACITY = 0.30  # 30%
-WATERMARK_SIZE = 60
+WATERMARK_SIZE = 80
 WATERMARK_ANGLE = 45
 WATERMARK_COLOR = (0, 0, 0) # Black
 
